@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <body style="margin:0;background:#F6F8FB;font-family:Arial,Helvetica,sans-serif;color:#0B1F3A;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 0;">
+      <tr><td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#FFFFFF;border-radius:16px;overflow:hidden;">
+          <tr><td style="background:#0B1F3A;padding:20px 24px;">
+            <span style="color:#16C1CF;font-size:24px;font-weight:800;">patapata</span>
+            <span style="color:#A7B8CC;font-size:13px;display:block;">Africa Connects Here.</span>
+          </td></tr>
+          <tr><td style="padding:24px;">
+            <h1 style="font-size:20px;margin:0 0 12px;">Reset your password</h1>
+            <p style="font-size:15px;line-height:22px;margin:0 0 16px;">Enter this code in the app to choose a new password:</p>
+            <p style="font-size:32px;letter-spacing:8px;font-weight:800;margin:0 0 16px;color:#0B7A85;">{{ .Token }}</p>
+            <p style="font-size:15px;line-height:22px;margin:0 0 20px;">Or tap the button on the device where you asked to reset it:</p>
+            <p style="margin:0 0 24px;"><a href="{{ .ConfirmationURL }}" style="background:#0B7A85;color:#FFFFFF;text-decoration:none;padding:12px 20px;border-radius:999px;font-weight:700;display:inline-block;">Reset my password</a></p>
+            <p style="font-size:13px;line-height:18px;color:#4F5F75;margin:0;">If you didn't ask to reset your password, you can ignore this email — your password won't change. Patapata staff will never ask for your password or code.</p>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>

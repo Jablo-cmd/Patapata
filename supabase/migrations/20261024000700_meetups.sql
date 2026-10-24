@@ -285,8 +285,8 @@ begin
   return query
     with rows as (
       select m.*, r.status as my_status,
-             (m.host_id = v_uid or m.venue_visibility = 'everyone' or r.status = 'going'
-              or app.is_staff(v_uid)) as venue_ok
+             (m.host_id = v_uid or m.venue_visibility = 'everyone'
+              or coalesce(r.status = 'going', false) or app.is_staff(v_uid)) as venue_ok
       from public.meetups m
       left join public.meetup_responses r on r.meetup_id = m.id and r.user_id = v_uid
       where app.can_view_meetup_row(m.host_id, m.audience, m.status, v_uid)

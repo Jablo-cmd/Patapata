@@ -1,36 +1,63 @@
 {
   "expo": {
-    "name": "patapata",
+    "name": "Patapata",
     "slug": "patapata",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/brand/icon.png",
     "scheme": "patapata",
     "userInterfaceStyle": "automatic",
+    "backgroundColor": "#0B1F3A",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "supportsTablet": true,
+      "bundleIdentifier": "africa.patapata.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "africa.patapata.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#0B1F3A",
+        "foregroundImage": "./assets/brand/android-icon-foreground.png",
+        "backgroundImage": "./assets/brand/android-icon-background.png",
+        "monochromeImage": "./assets/brand/android-icon-monochrome.png"
       },
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_BACKGROUND_LOCATION"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "server",
-      "favicon": "./assets/images/favicon.png"
+      "output": "single",
+      "favicon": "./assets/brand/favicon.png",
+      "name": "Patapata — Africa Connects Here",
+      "themeColor": "#0B1F3A",
+      "backgroundColor": "#0B1F3A"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#0B1F3A",
+          "image": "./assets/brand/splash-icon.png",
+          "imageWidth": 120
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Patapata uses your photos only when you choose a picture for your profile, a post or a message.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "If you turn on distance in Discover, Patapata stores an approximate location (about 1 km) to show rough distances. Your exact location is never shared."
         }
       ]
     ],

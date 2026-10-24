@@ -1,6 +1,6 @@
 {
   "name": "patapata",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo/ui": "~58.0.23",
@@ -37,6 +37,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~58.0.0",
     "supabase": "^2.122.0",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",
@@ -44,11 +46,20 @@
   },
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:db": "supabase test db",
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset",
+    "db:types": "supabase gen types typescript --local --schema public > src/lib/database.types.ts",
+    "functions:serve": "supabase functions serve",
+    "build:web": "expo export --platform web",
+    "brand:assets": "python3 scripts/generate-brand-assets.py"
   },
   "private": true
 }
