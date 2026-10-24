@@ -5,6 +5,7 @@ create extension if not exists pgtap with schema extensions;
 create schema if not exists tests;
 grant usage on schema tests to authenticated, anon;
 create table if not exists tests.users (name text primary key, id uuid not null);
+grant select on tests.users to authenticated, anon;
 
 -- Creates a confirmed auth user (the auth trigger creates the profile shell).
 create or replace function tests.create_user(p_name text, p_confirmed boolean default true)

@@ -1,9 +1,11 @@
 import { Stack } from 'expo-router';
 
+import { useBadgeSubscription } from '@/lib/hooks';
 import { useTheme } from '@/theme';
 
 export default function AppLayout() {
   const { colors } = useTheme();
+  useBadgeSubscription();
   return (
     <Stack
       screenOptions={{

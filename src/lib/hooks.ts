@@ -33,24 +33,14 @@ export function useCountryLabel(code: string | null | undefined) {
   return c ? `${c.flag_emoji} ${c.name}` : code;
 }
 
-/** Unread badges, kept fresh by Realtime when available and polling otherwise. */
-export function useBadges() {
+/**
+ * Keeps notification and conversation badges fresh via Realtime. Mount once
+ * (in the signed-in layout); polling in useBadges is the fallback.
+ */
+export function useBadgeSubscription() {
   const { userId, account } = useAuth();
   const queryClient = useQueryClient();
   const enabled = Boolean(userId) && account?.status === 'active';
-
-  const notifications = useQuery({
-    queryKey: ['notifications', 'unread'],
-    queryFn: unreadNotificationCount,
-    enabled,
-    refetchInterval: 120_000,
-  });
-  const conversations = useQuery({
-    queryKey: ['conversations'],
-    queryFn: listConversations,
-    enabled,
-    refetchInterval: 120_000,
-  });
 
   useEffect(() => {
     if (!enabled || !userId) return;
@@ -65,6 +55,25 @@ export function useBadges() {
       supabase.removeChannel(channel);
     };
   }, [enabled, userId, queryClient]);
+}
+
+/** Unread counts for badges (shared, cached queries; safe to call anywhere). */
+export function useBadges() {
+  const { userId, account } = useAuth();
+  const enabled = Boolean(userId) && account?.status === 'active';
+
+  const notifications = useQuery({
+    queryKey: ['notifications', 'unread'],
+    queryFn: unreadNotificationCount,
+    enabled,
+    refetchInterval: 120_000,
+  });
+  const conversations = useQuery({
+    queryKey: ['conversations'],
+    queryFn: listConversations,
+    enabled,
+    refetchInterval: 120_000,
+  });
 
   const unreadMessages = (conversations.data ?? []).reduce((n, c) => n + (c.unread_count > 0 ? 1 : 0), 0);
   return { unreadNotifications: notifications.data ?? 0, unreadMessages };

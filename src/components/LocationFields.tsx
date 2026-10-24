@@ -9,6 +9,7 @@ export function LocationFields({
   onChange,
   countryError,
   countryLabel = 'Country',
+  cityRequired = false,
 }: {
   country: string | null;
   region: string;
@@ -16,6 +17,7 @@ export function LocationFields({
   onChange: (v: { country: string | null; region: string; city: string }) => void;
   countryError?: string | null;
   countryLabel?: string;
+  cityRequired?: boolean;
 }) {
   const countries = useCountries();
   const regions = useRegions(country);
@@ -48,11 +50,12 @@ export function LocationFields({
         />
       )}
       <TextField
-        label="City or town (optional)"
+        label={cityRequired ? 'City or town' : 'City or town (optional)'}
         value={city}
         onChangeText={(c) => onChange({ country, region, city: c })}
         maxLength={80}
         hint="Shown as a general area only. Never share your home address."
+        testID="location-city"
       />
     </>
   );

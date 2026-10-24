@@ -78,7 +78,8 @@ export default function Chat() {
         return { ...data, pages: [[row, ...first.filter((m) => !(m.pending && m.sender_id === row.sender_id && m.body === row.body))], ...rest] };
       });
     const channel = supabase
-      .channel(`chat:${id}`)
+      // Unique topic per mounted screen: channels with the same name are shared.
+      .channel(`chat:${id}:${Math.random().toString(36).slice(2)}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${id}` }, (payload) =>
         upsert(payload.new as MessageRow),
       )

@@ -65,7 +65,7 @@ insert into public.dating_preferences (user_id, enabled, gender, interested_in) 
 -- bob has not opted in
 
 select tests.authenticate_as('alice');
-select is((select array_agg(username) from public.get_dating_candidates()), '{carol}'::text[],
+select is((select array_agg(username) from public.get_dating_candidates(50) where user_id in (select id from tests.users)), '{carol}'::text[],
           'only opted-in, mutually compatible members in age range are suggested');
 select is((public.get_profile('carol') ->> 'open_to_dating')::boolean, false, 'dating is hidden on profiles by default');
 select is(public.dating_respond(tests.uid('carol'), 'like'), false, 'one-sided like is not a match');
@@ -100,7 +100,7 @@ select tests.authenticate_as('carol');
 select throws_ok($$ select venue_name from public.meetups $$, '42501', null, 'venue columns are not directly selectable');
 select is((select venue_name from public.list_meetups(p_meetup => (select id from ids where name = 'coffee'))), null,
           'venue hidden until attending');
-select is((select count(*)::int from public.list_meetups()), 1, 'friends-only meetup hidden from non-friends');
+select is((select count(*)::int from public.list_meetups(p_host => tests.uid('alice'))), 1, 'friends-only meetup hidden from non-friends');
 select lives_ok(format($$ select public.respond_to_meetup(%L, 'going') $$, (select id from ids where name = 'coffee')), 'RSVP going');
 select is((select venue_name from public.list_meetups(p_meetup => (select id from ids where name = 'coffee'))), 'Daily Grind Cafe',
           'venue revealed to attendees');

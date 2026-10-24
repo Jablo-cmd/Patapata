@@ -16,20 +16,20 @@ insert into ids select 'friends_post', public.create_post('Hello friends @bob', 
 insert into ids select 'public_post', public.create_post('Hello Africa!', 'public');
 insert into ids select 'private_post', public.create_post('Note to self', 'only_me');
 
-select is((select count(*)::int from public.posts), 3, 'author sees all own posts');
+select is((select count(*)::int from public.posts where author_id = auth.uid()), 3, 'author sees all own posts');
 
 select tests.authenticate_as('bob');
-select is((select array_agg(body order by body) from public.posts),
+select is((select array_agg(body order by body) from public.posts where author_id = tests.uid('alice')),
           '{"Hello Africa!","Hello friends @bob"}'::text[], 'friend sees public + friends posts, not private');
 reset role;
 select is((select count(*)::int from public.notifications where user_id = tests.uid('bob') and type = 'mention'), 1,
           'mentioned friend is notified');
 
 select tests.authenticate_as('carol');
-select is((select array_agg(body) from public.posts), '{"Hello Africa!"}'::text[], 'non-friend sees only public posts');
+select is((select array_agg(body) from public.posts where author_id = tests.uid('alice')), '{"Hello Africa!"}'::text[], 'non-friend sees only public posts');
 select is((select count(*)::int from public.get_feed('home')), 0, 'non-friend home feed excludes alice');
-select is((select count(*)::int from public.get_feed('explore')), 1, 'explore feed shows public posts across Africa');
-select is((select count(*)::int from public.get_feed('search', p_query => 'africa')), 1, 'post search works');
+select is((select count(*)::int from public.get_feed('explore', p_limit => 50) where author_id = tests.uid('alice')), 1, 'explore feed shows public posts across Africa');
+select is((select count(*)::int from public.get_feed('search', p_query => 'africa', p_limit => 50) where author_id = tests.uid('alice')), 1, 'post search works');
 select is((select count(*)::int from public.get_feed('post', p_post => (select id from ids where name = 'friends_post'))), 0,
           'cannot fetch a friends-only post by id');
 
@@ -73,7 +73,7 @@ select is((select count(*)::int from public.notifications where user_id = tests.
 select tests.authenticate_as('alice');
 delete from public.comments where id = (select id from ids where name = 'carol_comment');
 reset role;
-select is((select count(*)::int from public.comments), 0, 'post owner can delete comments on own post');
+select is((select count(*)::int from public.comments where post_id = (select id from ids where name = 'public_post')), 0, 'post owner can delete comments on own post');
 
 -- reshares
 select tests.authenticate_as('bob');
@@ -104,10 +104,10 @@ select tests.authenticate_as('alice');
 insert into ids select 'media_post',
   public.create_post('Pics', 'friends', format('[{"path":"%s/photo-abcdefgh.jpg","width":800,"height":600}]', tests.uid('alice'))::jsonb);
 select tests.authenticate_as('bob');
-select is((select count(*)::int from storage.objects where bucket_id = 'post-media'), 1, 'friend can read media of a friends-only post');
+select is((select count(*)::int from storage.objects where bucket_id = 'post-media' and name like tests.uid('alice') || '/%'), 1, 'friend can read media of a friends-only post');
 select tests.authenticate_as('carol');
-select is((select count(*)::int from storage.objects where bucket_id = 'post-media'), 0, 'non-friend cannot read that media');
-select is((select count(*)::int from public.post_media), 0, 'non-friend cannot list that media');
+select is((select count(*)::int from storage.objects where bucket_id = 'post-media' and name like tests.uid('alice') || '/%'), 0, 'non-friend cannot read that media');
+select is((select count(*)::int from public.post_media where owner_id = tests.uid('alice')), 0, 'non-friend cannot list that media');
 
 -- blocks and moderation removals hide content
 select tests.authenticate_as('alice');

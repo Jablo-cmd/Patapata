@@ -149,7 +149,7 @@ function MeetupForm({
         {edit ? (
           <TextField label="City" value={location.city} onChangeText={(city) => setLocation((l) => ({ ...l, city }))} maxLength={80} />
         ) : (
-          <LocationFields country={location.country} region={location.region} city={location.city} onChange={setLocation} />
+          <LocationFields country={location.country} region={location.region} city={location.city} onChange={setLocation} cityRequired />
         )}
         <Row gap={8} align="flex-start">
           <View style={{ flex: 1.4 }}>

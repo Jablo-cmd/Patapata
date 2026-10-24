@@ -97,7 +97,7 @@ export default function Discover() {
       </Row>
       <Row gap={8} align="flex-start">
         <View style={{ flex: 1 }}>
-          <TextField placeholder="Search names, usernames or interests" value={query} onChangeText={setQuery} autoCapitalize="none" returnKeyType="search" testID="discover-search" />
+          <TextField placeholder="Search people or interests" value={query} onChangeText={setQuery} autoCapitalize="none" returnKeyType="search" testID="discover-search" />
         </View>
         <Button
           title={activeCount ? `Filters (${activeCount})` : 'Filters'}
